@@ -42,7 +42,7 @@ class ObsidianMarkdownProcessor:
 
         tags_content = tags_section.find_next_sibling()
         if tags_content:
-            tags = [word for word in tags_content.text.split() if word.startswith("#")]
+            tags = [word.replace("#", "", 1) for word in tags_content.text.split() if word.startswith("#")]
         return tags
 
     @staticmethod
