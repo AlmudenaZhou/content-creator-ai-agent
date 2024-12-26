@@ -1,10 +1,11 @@
-import os
 import logging
+
+from src.infrastructure.readers import BaseReader
 
 
 logger = logging.getLogger(__name__)
 
-class MarkdownReader:
+class MarkdownReader(BaseReader):
 
     @staticmethod
     def read(file_path: str) -> str:
@@ -40,8 +41,7 @@ class MarkdownReader:
             logger.warning("The file extension is not .md")
 
         markdown_content = MarkdownReader.read(file_path)
-        file_folder_hierarchy, filename = os.path.split(file_path)
-        folder_hierarchy = file_folder_hierarchy.split(os.sep)
+        folder_hierarchy, filename = MarkdownReader._get_folder_hierarchy(file_path)
 
         logger.info("Extracted folder hierarchy from markdown file")
         return {
