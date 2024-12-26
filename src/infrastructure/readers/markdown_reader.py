@@ -46,6 +46,6 @@ class MarkdownReader:
         logger.info("Extracted folder hierarchy from markdown file")
         return {
             "title": filename.replace(".md", ""),
-            "raw_md": markdown_content,
+            "raw_content": markdown_content,
             "folders": folder_hierarchy
         }

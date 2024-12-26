@@ -3,7 +3,7 @@ import logging
 
 from markdown import markdown
 from bs4 import BeautifulSoup
-from src.domain.pydantic_models.input_models import MarkdownDocument
+from src.domain.pydantic_models.input_models import InputDocument
 
 
 logger = logging.getLogger(__name__)
@@ -108,25 +108,25 @@ class ObsidianMarkdownProcessor:
         return re.sub(r"#(\w+)", r"\\#\1", md_content)
 
     @staticmethod
-    def process(md_metadata: dict) -> MarkdownDocument:
+    def process(md_metadata: dict) -> InputDocument:
         """
-        Processes a Markdown content and creates a MarkdownDocument object.
+        Processes a Markdown content and creates a InputDocument object.
 
         Args:
             file_path (str): The path to the Markdown file.
 
         Returns:
-            MarkdownDocument: An instance of the MarkdownDocument model.
+            InputDocument: An instance of the InputDocument model.
         """
         logger.info("Processing the Markdown...")
         logger.debug(f"Markdown Content: {md_metadata}")
-        raw_md = md_metadata["raw_md"]
+        raw_content = md_metadata["raw_content"]
         folders = md_metadata["folders"]
         title = md_metadata["title"]
         logger.info(f"Markdown Title: {title}")
 
-        raw_md = ObsidianMarkdownProcessor._preprocess_markdown(raw_md)
-        html_content = markdown(raw_md)
+        raw_content = ObsidianMarkdownProcessor._preprocess_markdown(raw_content)
+        html_content = markdown(raw_content)
         soup = BeautifulSoup(html_content, "html.parser")
         logger.info("Markdown converted into html")
         
@@ -154,11 +154,11 @@ class ObsidianMarkdownProcessor:
 
         obsidian_references = ObsidianMarkdownProcessor._get_inline_references_from_html(soup, bibliographic_references)
 
-        return MarkdownDocument(
+        return InputDocument(
             title=title,
             subtitles=subtitles,
             content=content,
-            raw_md=raw_md,
+            raw_content=raw_content,
             folders=folders,
             tags=tags,
             bibliographic_references=bibliographic_references,
